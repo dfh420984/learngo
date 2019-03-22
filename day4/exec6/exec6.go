@@ -1,10 +1,10 @@
-package main
+package exec6
 
 import (
 	"fmt"
 )
 
-func cal(n1 float64, n2 float64, oper byte) float64 {
+func Cal(n1 float64, n2 float64, oper byte) float64 {
 	var res float64
 	switch oper {
 		case '+':
@@ -19,10 +19,4 @@ func cal(n1 float64, n2 float64, oper byte) float64 {
 			fmt.Println("操作符不合法。。")
 	}
 	return res	
-}
-
-func main()  {
-	var res float64
-	res = cal(4.0, 2.0, '+')
-	fmt.Println("res=", res)
 }
