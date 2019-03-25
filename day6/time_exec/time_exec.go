@@ -43,4 +43,11 @@ func main() {
 	test03()
 	end := time.Now().Unix()
 	fmt.Printf("test03耗时%v秒", end-start)
+
+	num1 := 100
+	fmt.Printf("num1得类型%T,num1得值%v，num1得地址%v \n", num1, num1, &num1)
+
+	num2 := new(int)
+	*num2 = 200
+	fmt.Printf("num2得类型%T,num2得值%v，num2得地址%v,num2指针指向得值 \n", num2, num2, &num2, *num2)
 }
