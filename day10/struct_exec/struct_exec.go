@@ -120,7 +120,15 @@ func (c *Circle) area2() float64 {
 //实现String方法
 type Student struct {
 	Name string
+	Gender string
 	Age int
+	Id int
+	Score float64
+}
+
+func (stu Student) say() string {
+	res := fmt.Sprintf("Name=%v,Gender=%v,Age=%v,Id=%v,Score=%v",stu.Name,stu.Gender,stu.Age,stu.Id,stu.Score)
+	return res
 }
 
 func (stu *Student) String() string {
@@ -214,6 +222,18 @@ func (ex Exchange) print3() {
 
 }
 
+//求体积
+type Box struct {
+	len float64
+	width float64
+	height float64
+}
+
+func (b Box) tiji() float64 {
+	return b.len * b.width * b.height
+}
+
+
 func main()  {
 	//test()
 	//test02()
@@ -248,8 +268,26 @@ func main()  {
 
 	// var mu *MethodUtils = &MethodUtils{}
 	// mu.Print2()
-	ex := Exchange{
-		[3][3]int{{1,2,3},{4,5,6},{7,8,9}},
-	}
-	ex.print3()
+	// ex := Exchange{
+	// 	[3][3]int{{1,2,3},{4,5,6},{7,8,9}},
+	// }
+	// ex.print3()
+
+	// stu := Student{
+	// 	Name:"段福浩",
+	// 	Gender:"男",
+	// 	Age:30,
+	// 	Id:123,
+	// 	Score:100.0,
+	// }
+	// fmt.Println(stu.say())
+
+	var b Box
+	fmt.Println("请输入长度")
+	fmt.Scanln(&b.len)
+	fmt.Println("请输入宽度")
+	fmt.Scanln(&b.width)
+	fmt.Println("请输入高度")
+	fmt.Scanln(&b.height)
+	fmt.Println(b.tiji())
 }
