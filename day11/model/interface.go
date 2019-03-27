@@ -12,7 +12,7 @@ type Usb interface {
 
 //定义一个Phone结构体
 type Phone struct {
-
+	Name string
 }
 
 //让Phone实现Start() Stop()
@@ -24,9 +24,13 @@ func (p Phone) Stop() {
 	fmt.Println("手机停止工作")
 }
 
+func (p Phone) Call() {
+	fmt.Println("手机正在打电话")
+}
+
 //定义一个Cammera结构体
 type Cammera struct {
-
+	Name string
 }
 
 //让Cammera实现Start() Stop()
@@ -45,6 +49,10 @@ type Computer struct {
 //usb是实现了Usb接口方法得结构体变量
 func (com Computer) Working(usb Usb) {
 	usb.Start()
+	//接口类型断言
+	if phone, ok := usb.(Phone); ok {
+		phone.Call()
+	}
 	usb.Stop()
 }
 

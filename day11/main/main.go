@@ -77,11 +77,22 @@ func test05() {
 
 //接口入门案例
 func test06() {
-	phone := &model.Phone{}
-	camera := &model.Cammera{}
-	computer := &model.Computer{}
-	computer.Working(phone)
-	computer.Working(camera)
+	// phone := &model.Phone{}
+	// camera := &model.Cammera{}
+	// computer := &model.Computer{}
+	// fmt.Printf("phone type %T \n", phone)
+	// computer.Working(phone)
+	// computer.Working(camera)
+	//接口数组
+	var usbArr [3]model.Usb
+	usbArr[0] = model.Phone{"小米"}
+	usbArr[1] = model.Phone{"vivo"}
+	usbArr[2] = model.Cammera{"尼康"}
+	var computer model.Computer
+	for _,v := range usbArr { 
+		computer.Working(v)
+		fmt.Println()
+	}
 }
 
 func test07() {
@@ -175,6 +186,42 @@ func test13() {
 	littleMokey.Swim()
 }
 
+//接口类型断言
+func test14() {
+	var x interface{}
+	var b float32 = 1.1
+	x = b
+	//y := x.(float32)
+	if y, ok := x.(float32); ok {
+		fmt.Printf("y得类型%T,值是%v", y, y)
+	} else {
+		fmt.Println("covert fail")
+	}
+	
+}
+
+func TypeJudge(items... interface{}) {
+	for index, x := range items{
+		switch x.(type) {
+			case bool:
+				fmt.Printf("第%v个参数是bool类型，值是%v\n", index, x)
+			case float32, float64:
+				fmt.Printf("第%v个参数是float类型，值是%v\n", index, x)
+			case int, int32, int64:
+				fmt.Printf("第%v个参数是int类型，值是%v\n", index, x)
+			case string:
+				fmt.Printf("第%v个参数是string类型，值是%v\n", index, x)
+			case model.Student:
+				fmt.Printf("第%v个参数是Student类型，值是%v\n", index, x)
+			case *model.Student:
+				fmt.Printf("第%v个参数是*model.Student类型，值是%v\n", index, x)
+			default:
+				fmt.Printf("第%v个参数类型不确定，值是%v\n", index, x)
+		}
+			
+	}
+}
+
 func main()  {
 	//test01()
 	//test02()
@@ -188,5 +235,23 @@ func main()  {
 	//test10()
 	//test11()
 	//test12()
-	test13()
+	//test13()
+	//test14()
+	var n1 float32 = 3.0
+	var n2 float64 = 3.6
+	var n3 int32 = 10
+	var name string = "北京"
+	address := "上海"
+	n4 := 300 
+	var stu  = model.Student{
+		Name : "jack",
+		Age : 30,
+		Score : 99,
+	}
+	var stu2  = &model.Student{
+		Name : "jack",
+		Age : 30,
+		Score : 99,
+	}
+	TypeJudge(n1,n2,n3,name,address,n4,stu,stu2)
 }
