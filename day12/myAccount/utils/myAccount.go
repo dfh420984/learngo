@@ -12,6 +12,8 @@ type MyAccount struct {
 	note string
 	loop bool
 	flag bool
+	name string
+	pwd string
 }
 
 func FactoryAccount() *MyAccount {
@@ -23,6 +25,8 @@ func FactoryAccount() *MyAccount {
 		note : "",
 		loop : true,
 		flag : false,
+		name : "duanfuhao",
+		pwd : "123456",
 	}
 }
 
@@ -62,6 +66,20 @@ func (this *MyAccount) pay() {
 	this.flag = true
 }
 
+func (this *MyAccount) exchange() {
+	fmt.Println("本次转账金额:")
+	fmt.Scanln(&this.money)
+	if this.money > this.balance {
+		fmt.Println("余额的金额不足")
+		return
+	}
+	this.balance -= this.money // 修改账户余额
+	fmt.Println("本次转账说明:")
+	fmt.Scanln(&this.note)
+	this.details += fmt.Sprintf("\n转账\t%v\t\t%v\t\t%v", this.balance, this.money, this.note)
+	this.flag = true
+}
+
 func (this *MyAccount) exit() {
 	fmt.Println("你确定要退出吗? y/n")
 	choice := ""
@@ -78,30 +96,57 @@ func (this *MyAccount) exit() {
 	}
 }
 
-func (this *MyAccount)  MainMenu() { 
-	for {
-		fmt.Println("\n-----------------家庭收支记账软件-----------------")
-		fmt.Println("                  1 收支明细")
-		fmt.Println("                  2 登记收入")
-		fmt.Println("                  3 登记支出")
-		fmt.Println("                  4 退出软件")
-		fmt.Print("请选择(1-4)：")
-		fmt.Scanln(&this.key)
-		switch this.key {
-			case "1":
-				this.showDetails()
-			case "2":
-				this.income()
-			case "3":
-				this.pay()
-			case "4":
-				this.exit()
-			default:
-				fmt.Println("请输入正确选项")
-		}
-		if !this.loop {
-			break
-		}
+func (this *MyAccount) login() bool { 
+	inname := ""
+	inpwd := ""
+	fmt.Println("请输入用户名")
+	fmt.Scanln(&inname)
+	if this.name == inname {
+		fmt.Println("请输入密码")
+		fmt.Scanln(&inpwd)
+	} else {
+		return false
 	}
+	if this.name != inname || this.pwd != inpwd {
+		return false
+	} else {
+		fmt.Println("登陆成功")
+		return true
+	}
+}
+
+func (this *MyAccount)  MainMenu() { 
+	if this.login() {
+		for {
+			fmt.Println("\n-----------------家庭收支记账软件-----------------")
+			fmt.Println("                  1 收支明细")
+			fmt.Println("                  2 登记收入")
+			fmt.Println("                  3 登记支出")
+			fmt.Println("                  4 退出软件")
+			fmt.Println("                  5 转账")
+			fmt.Print("请选择(1-4)：")
+			fmt.Scanln(&this.key)
+			switch this.key {
+				case "1":
+					this.showDetails()
+				case "2":
+					this.income()
+				case "3":
+					this.pay()
+				case "4":
+					this.exit()
+				case "5":
+					this.exchange()
+				default:
+					fmt.Println("请输入正确选项")
+			}
+			if !this.loop {
+				break
+			}
+		}
+	} else {
+		fmt.Println("请输入正确用户名和密码")
+	}
+	
 	
 }
