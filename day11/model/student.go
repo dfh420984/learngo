@@ -10,6 +10,22 @@ type Student struct {
 	Score int
 }
 
+//声明一个Student类型切片，并按Score从小到大排序
+type StuSlice []Student
+
+//实现sort.Sort(data Interface)接口方法
+func (hs StuSlice) Len() int {
+	return len(hs)
+}
+
+func (hs StuSlice) Less(i, j int) bool {
+	return hs[i].Score < hs[j].Score
+}
+
+func (hs StuSlice) Swap(i, j int) {
+	hs[i], hs[j] = hs[j], hs[i]
+}
+
 type Puiple struct {
 	Student
 }
