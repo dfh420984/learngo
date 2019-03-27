@@ -41,8 +41,42 @@ func test03() {
 	p2.Student.ShowInfo()
 }
 
+func test04() {
+	c := model.C{
+		model.A{
+			Name : "jack",
+			Age : 20,
+		},
+		model.B{
+			Name : "Tom",
+			Score : 99.0,
+		},
+	}
+	fmt.Println("c=", c)
+	fmt.Println("c.A.Name=", c.A.Name)
+}
+
+func test05() {
+	d := model.D{
+		&model.A{
+			Name : "jack",
+			Age : 20,
+		},
+		&model.B{
+			Name : "Tom",
+			Score : 99.0,
+		},
+	}
+	fmt.Println("d=", d)
+	fmt.Printf("*d.A type=%T \n", *d.A)
+	fmt.Printf("d.B type=%T \n", d.B)
+	fmt.Println(d.B.Score)
+}
+
 func main()  {
 	//test01()
 	//test02()
-	test03()
+	//test03()
+	//test04()
+	test05()
 }

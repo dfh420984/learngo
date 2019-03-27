@@ -10,6 +10,7 @@ type student struct{
 	score float64
 }
 
+
 func  Newstudent(n1 string, s1 float64) *student  {
 	return &student{
 		Name : n1,
