@@ -45,6 +45,17 @@ func (this *CustomerService) Add(customer *model.Customer) bool {
 	
 }
 
+//完成客户修改
+
+func (this *CustomerService) Edit(id int, customer *model.Customer) bool {
+	if this.Delete(id) { 
+		this.customers = append(this.customers, customer)
+		return true
+	} else {
+		return false
+	}
+}
+
 
 //删除一个客户
 func (this *CustomerService) Delete(id int) bool {

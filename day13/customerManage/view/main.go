@@ -35,6 +35,7 @@ func (this *CustomerView) mainMenu() {
 			this.add()
 		case "2":
 			//同学们自己加入
+			this.edit()
 		case "3":
 			this.delete()
 		case "4":
@@ -113,6 +114,50 @@ func (this *CustomerView) add() {
 		fmt.Println("---------------------添加客户成功---------------------");
 	}else{
 		fmt.Println("---------------------添加客户失败---------------------");
+	}
+}
+
+//修改客户信息
+func (this *CustomerView) edit() {
+	fmt.Println("---------------------修改客户---------------------")
+	fmt.Println("编号：")
+	id := 0
+	count := 0
+	for {
+		fmt.Scanln(&id)
+		index := this.customerService.FindById(id) 
+		if index == -1 {
+			count++
+			if (count < 3) {
+				fmt.Println("---------------------客户编号不存在，请重新输入---------------------")
+			} else {
+				fmt.Println("---------------------输入错误次数过多---------------------")
+				return
+			}
+		} else {
+			break
+		}
+	}
+	fmt.Println("姓名：")
+	name := ""
+	fmt.Scanln(&name)
+	fmt.Println("性别：")
+	gender := ""
+	fmt.Scanln(&gender)
+	age := 0
+	fmt.Println("年龄：")
+	fmt.Scanln(&age)
+	fmt.Println("电话：");
+	phone := ""
+	fmt.Scanln(&phone)
+	fmt.Println("邮箱：");
+	email := ""
+	fmt.Scanln(&email)
+	customer := model.NewCustomer(id, name, gender, age, phone, email)
+	if this.customerService.Edit(id, customer) {
+		fmt.Println("---------------------客户修改成功---------------------");
+	} else {
+		fmt.Println("---------------------客户修改失败---------------------");
 	}
 }
 
