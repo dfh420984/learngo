@@ -52,11 +52,36 @@ func testRefStruct(b interface{}) {
 	}
 }
 
+type Monster struct {
+	Name string `json:"name"`
+	Age int `json:"monster_age"`
+	Score float32 `json:"monster_score"`
+	Sex string 
+}
+
+func testRefMonster(a interface{}) {
+	typ := reflect.TypeOf(a)
+	val := reflect.ValueOf(a)
+	kind := val.Kind()
+	fmt.Printf("typ=%v,val=%v,kind=%v \n", typ, val, kind)
+	if kind != reflect.Struct {
+		fmt.Println("expect struct")
+		return 
+	}
+}
+
 func main()  {
 	// var num int = 10
 	// testRefInt(&num)
 	// fmt.Println("num=",num)
 	// stu := Student{Name:"jack", Age:10}
 	// testRefStruct(stu)
-	testRefFloat64(1.23)
+	//testRefFloat64(1.23)
+	monster := Monster{
+		Name : "暴君",
+		Age : 30,
+		Score : 99.9,
+		Sex : "男",
+	}
+	testRefMonster(monster)
 }
