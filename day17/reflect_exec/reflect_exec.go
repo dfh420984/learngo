@@ -55,8 +55,19 @@ func testRefStruct(b interface{}) {
 type Monster struct {
 	Name string `json:"name"`
 	Age int `json:"monster_age"`
-	Score float32 `json:"monster_score"`
+	Score float64 `json:"monster_score"`
 	Sex string 
+}
+
+func (this *Monster) Jisuan(n1 int, n2 int) int {
+	return n1 + n2
+}
+
+func (this *Monster) Set(name string, age int, score float64, sex string)  {
+	this.Name = name
+	this.Age = age
+	this.Score = score
+	this.Sex = sex
 }
 
 func testRefMonster(a interface{}) {
@@ -64,10 +75,43 @@ func testRefMonster(a interface{}) {
 	val := reflect.ValueOf(a)
 	kind := val.Kind()
 	fmt.Printf("typ=%v,val=%v,kind=%v \n", typ, val, kind)
-	if kind != reflect.Struct {
-		fmt.Println("expect struct")
+	if kind != reflect.Ptr {
+		fmt.Println("expect Ptr")
 		return 
 	}
+	//获取字段个数
+	num := val.Elem().NumField()
+	fmt.Println("num=", num)
+
+	//获取字段名称和tag标签名
+	for i := 0; i < num; i++ {  
+		//structField := typ.Field(i)
+		//获取字段名称
+		fmt.Printf("typ.Field(%d).name=%v \n", i, typ.Elem().Field(i).Name)
+		//获取tag标签
+		fmt.Printf("typ.Field(%d).tag_name=%v \n", i, typ.Elem().Field(i).Tag.Get("json"))
+	}
+
+	//获取方法个数
+	numMethod := val.NumMethod()
+	fmt.Println("numMethod=", numMethod)
+
+	//调用两个方法
+	var params []reflect.Value
+	params = append(params, reflect.ValueOf(10))
+	params = append(params, reflect.ValueOf(20))
+	res := val.Method(0).Call(params)
+	fmt.Printf("res=%v \n", res[0].Int())
+	// for i := 0; i < numMethod; i++ {  
+	// 	fmt.Printf("val.Method(%d)=%v \n", i, val.Method(i))
+	// }
+	var params1 []reflect.Value
+	params1 = append(params1, reflect.ValueOf("dfh420984"))
+	params1 = append(params1, reflect.ValueOf(20))
+	params1 = append(params1, reflect.ValueOf(100.0))
+	params1 = append(params1, reflect.ValueOf("男"))
+	val.Method(1).Call(params1)
+
 }
 
 func main()  {
@@ -83,5 +127,6 @@ func main()  {
 		Score : 99.9,
 		Sex : "男",
 	}
-	testRefMonster(monster)
+	testRefMonster(&monster)
+	fmt.Println(monster)
 }
