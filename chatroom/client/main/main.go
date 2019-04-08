@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"os"
+	"learngo/chatroom/client/process"
 )
 
 var userId int
@@ -21,7 +22,14 @@ func main()  {
 		switch key {
 			case 1:
 				fmt.Println("登陆聊天室")
-				loop = false
+				fmt.Println("请输入用户的id")
+				fmt.Scanf("%d\n", &userId)
+				fmt.Println("请输入用户的密码")
+				fmt.Scanf("%s\n", &userPwd)
+				// 完成登录
+				//1. 创建一个UserProcess的实例
+				up := &process.UserProcess{}
+				up.Login(userId, userPwd)
 			case 2:
 				fmt.Println("注册用户")
 				loop = false
@@ -32,14 +40,5 @@ func main()  {
 			default:
 				fmt.Println("输入有误，请从新输入")
 		}
-	}
-	if key == 1 {
-		fmt.Println("请输入用户id")
-		fmt.Scanf("%d\n", &userId)
-		fmt.Println("请输入用户密码")
-		fmt.Scanf("%s\n", &userPwd)
-		login(userId, userPwd)
-	} else if key == 2 {
-		fmt.Println("注册用户逻辑")
 	}
 }

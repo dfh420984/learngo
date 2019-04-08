@@ -1,15 +1,20 @@
-package main
+package process
 
 import (
 	"fmt"
 	"net"
 	"learngo/chatroom/common/message"
+	"learngo/chatroom/client/utils"
 	"encoding/json"
 	"encoding/binary"
 	_"time"
 )
 
-func login(userId int, userPwd string)  (err error) {
+type UserProcess struct {
+
+}
+
+func (this *UserProcess) Login(userId int, userPwd string)  (err error)  {
 	// fmt.Printf("userId = %d userPwd = %s \n", userId, userPwd)
 	// return nil
 	//1.连接到服务器
@@ -71,8 +76,12 @@ func login(userId int, userPwd string)  (err error) {
 
 	// time.Sleep(time.Second*3)
 	// fmt.Println("休眠了3秒")
-	//9.处理服务器返回信息
-	mes, err = readPkg(conn)
+	//9.处理服务器返回信息 
+	//创建一个Transfer 实例
+	tf := &utils.Transfer{
+		Conn : conn,
+	}
+	mes, err = tf.ReadPkg() 
 	if err != nil {
 		fmt.Println("login readPkg(conn) error = ", err)
 		return
