@@ -9,8 +9,11 @@ import (
 	"encoding/json"
 )
 
-type UserProcess struct {
+type UserProcess struct { 
+	//服务器连接
 	Conn net.Conn
+	//增加一个字段，表示该Conn是哪个用户
+	UserId int
 }
 
 //用来处理用户登陆逻辑
@@ -48,6 +51,13 @@ func (this *UserProcess) ServerProcessLogin(mes *message.Message) (err error) {
 		}
 	} else {
 		loginResMes.Code = 200
+		//将登陆成功的用户放入usrMgr实例中
+		this.UserId = LoginMes.UserId
+		usrMgr.AddOnlineUser(this)
+		//将userId放入loginResMes中
+		for id, _ := range usrMgr.onlineUsers {
+			loginResMes.UsersId = append(loginResMes.UsersId, id)
+		}
 		fmt.Println(user, "登录成功")
 	}
 	

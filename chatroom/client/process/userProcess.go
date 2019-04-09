@@ -91,6 +91,16 @@ func (this *UserProcess) Login(userId int, userPwd string)  (err error)  {
 	err = json.Unmarshal([]byte(mes.Data), &loginResMes)
 	if loginResMes.Code == 200 {
 		//fmt.Println("登陆成功")
+		fmt.Println("当前在线用户列表如下:")
+		for _, v := range loginResMes.UsersId {
+			//如果我们要求不显示自己在线,下面我们增加一个代码
+			if v == userId {
+				continue
+			}
+
+			fmt.Println("用户id:\t", v)
+		}
+		fmt.Print("\n\n")
 		go serverProcessMes(conn)
 		for {
 			ShowMenu()
