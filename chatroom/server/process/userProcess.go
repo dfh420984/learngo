@@ -58,6 +58,8 @@ func (this *UserProcess) ServerProcessLogin(mes *message.Message) (err error) {
 		for id, _ := range usrMgr.onlineUsers {
 			loginResMes.UsersId = append(loginResMes.UsersId, id)
 		}
+		//通知其他用户上线
+		this.NotifyOthersOnlineUser(LoginMes.UserId)
 		fmt.Println(user, "登录成功")
 	}
 	
@@ -132,4 +134,50 @@ func (this *UserProcess) ServerProcessRegister(mes *message.Message) (err error)
 		Conn : this.Conn,
 	}
 	return tf.WritePkg(data)
+}
+
+//通知所有在线用户的方法
+func (this *UserProcess) NotifyOthersOnlineUser(userId int) {
+	for id, up := range usrMgr.onlineUsers {
+		if id == userId {
+			continue
+		}
+		//开始一个个通知
+		up.NotifyMeOnline(userId)
+	}
+}
+
+func (this *UserProcess) NotifyMeOnline(userId int) { 
+	//1.开始组装NotifyUserStatusMes结构体消息
+	var mes message.Message
+	mes.Type = message.NotifyUserStatusMesType
+
+	var notifyUserStatusMes message.NotifyUserStatusMes
+	notifyUserStatusMes.UserId = userId
+	notifyUserStatusMes.Status = message.UserOnline
+
+	//2.将NotifyUserStatusMes序列化
+	data, err := json.Marshal(notifyUserStatusMes)
+	if err != nil {
+		fmt.Println("json.Marshal(notifyUserStatusMes) err =", err)
+		return
+	}
+
+	//3.对mes进行序列化准备发送
+	mes.Data = string(data)
+	data, err = json.Marshal(mes)
+	if err != nil {
+		fmt.Println("json.Marshal(mes) err =", err)
+		return
+	}
+
+	//4.创建Transfer实例发送
+	tf := &utils.Transfer{
+		Conn : this.Conn,
+	}
+	err = tf.WritePkg(data)
+	if err != nil {
+		fmt.Println("notifyOnMe err", err)
+	}
+	return
 }

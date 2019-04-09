@@ -4,7 +4,9 @@ import (
 	"fmt"
 	"net"
 	"learngo/chatroom/client/utils"
+	"learngo/chatroom/common/message"
 	"os"
+	"encoding/json"
 )
 
 func ShowMenu()  {
@@ -18,7 +20,8 @@ func ShowMenu()  {
 	fmt.Scanf("%d\n", &key) 
 	switch key {
 		case 1:
-			fmt.Println("显示在线用户列表-")
+			fmt.Println("在线用户列表:")
+			outputOnlineUser()
 		case 2:
 			fmt.Println("发送消息)")
 		case 3:
@@ -44,6 +47,15 @@ func serverProcessMes(conn net.Conn) {
 			return
 		}
 		//读取到进行下一步处理逻辑
-		fmt.Printf("mes=%v \n", mes)
+		//fmt.Printf("mes=%v \n", mes)
+		switch mes.Type {
+			case message.NotifyUserStatusMesType: //有人上线了
+				var notifyUserStatusMes message.NotifyUserStatusMes 
+				json.Unmarshal([]byte(mes.Data), &notifyUserStatusMes) 
+				//将用户信息保存到onlineUsers map[int]*message.User
+				updateUserStatus(&notifyUserStatusMes)
+			default:
+				fmt.Println("服务器返回了未知信息")
+		}
 	}
 }
