@@ -89,8 +89,12 @@ func (this *UserProcess) Login(userId int, userPwd string)  (err error)  {
 	var loginResMes message.LoginResMes
 	err = json.Unmarshal([]byte(mes.Data), &loginResMes)
 	if loginResMes.Code == 200 {
-		fmt.Println("登陆成功")
-	} else if loginResMes.Code == 500 {
+		//fmt.Println("登陆成功")
+		go serverProcessMes(conn)
+		for {
+			ShowMenu()
+		}
+	} else {
 		fmt.Println(loginResMes.Error)
 	}
 	return 

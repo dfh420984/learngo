@@ -3,9 +3,18 @@ package main
 import (
 	"fmt"
 	"net"
+	"learngo/chatroom/server/model"
+	"time"
 )
 
+func initUserDao() {
+	model.MyUserDao = model.NewUserDao(pool)
+}
+
 func main()  {
+	//初始化redis链接池
+	initPool("0.0.0.0:6379", 16, 0, 300 * time.Second)
+	initUserDao()
 	fmt.Println("服务器正在监听8889端口")
 	listen, err := net.Listen("tcp","0.0.0.0:8889")
 	defer listen.Close()

@@ -5,6 +5,7 @@ import (
 	"net"
 	"learngo/chatroom/common/message"
 	"learngo/chatroom/server/utils"
+	"learngo/chatroom/server/model"
 	"encoding/json"
 )
 
@@ -26,12 +27,30 @@ func (this *UserProcess) ServerProcessLogin(mes *message.Message) (err error) {
 	resMes.Type = message.LoginResMesType
 	//3.在声明一个loginResMes
 	var loginResMes message.LoginResMes
-	if LoginMes.UserId == 100 && LoginMes.UserPwd == "123456" {
-		loginResMes.Code = 200
+	// if LoginMes.UserId == 100 && LoginMes.UserPwd == "123456" {
+	// 	loginResMes.Code = 200
+	// } else {
+	// 	loginResMes.Code = 500
+	// 	loginResMes.Error = "该用户不存在，请注册在使用"
+	// }
+	//去redis校验userId,userPwd
+	user, err := model.MyUserDao.Login(LoginMes.UserId, LoginMes.UserPwd)
+	if err != nil {
+		if err == model.ERROR_USER_NOTEXISTS {
+			loginResMes.Code = 500
+			loginResMes.Error = err.Error()
+		} else if err == model.ERROR_USER_PWD {
+			loginResMes.Code = 403
+			loginResMes.Error = err.Error()
+		} else {
+			loginResMes.Code = 505
+			loginResMes.Error = "服务器内部错误"
+		}
 	} else {
-		loginResMes.Code = 500
-		loginResMes.Error = "该用户不存在，请注册在使用"
+		loginResMes.Code = 200
+		fmt.Println(user, "登录成功")
 	}
+	
 	//3.将loginResMes序列化
 	data, err := json.Marshal(loginResMes)
 	if err != nil {
