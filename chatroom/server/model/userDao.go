@@ -3,6 +3,7 @@ package model
 import (
 	"fmt"
 	"github.com/garyburd/redigo/redis"
+	"learngo/chatroom/common/message"
 	"encoding/json"
 )
 
@@ -57,6 +58,32 @@ func (this *UserDao) Login(userId int, userPwd string) (user *User, err error) {
 	if user.UserPwd != userPwd {
 		err = ERROR_USER_PWD
 		return
+	}
+	return
+}
+
+//用户注册
+func (this *UserDao) Register(user *message.User) (err error) {
+	conn := this.pool.Get()
+	defer conn.Close()
+	_, err = this.getUserById(user.UserId)
+	if err == nil { //此时说明用户存在
+		err = ERROR_USER_EXISTS
+		return
+	}
+
+	//序列化数据
+	data, err := json.Marshal(user)
+	if err != nil {
+		fmt.Println("Register json.Marshal(user) err = ", err)
+		return 
+	}
+
+	//入redis处理
+	_, err = conn.Do("HSET","users",user.UserId,string(data))
+	if err != nil {
+		fmt.Println("Register redis hset err = ", err)
+		return 
 	}
 	return
 }

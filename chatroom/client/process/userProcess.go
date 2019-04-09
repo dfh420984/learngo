@@ -7,6 +7,7 @@ import (
 	"learngo/chatroom/client/utils"
 	"encoding/json"
 	"encoding/binary"
+	"os"
 	_"time"
 )
 
@@ -96,6 +97,74 @@ func (this *UserProcess) Login(userId int, userPwd string)  (err error)  {
 		}
 	} else {
 		fmt.Println(loginResMes.Error)
+	}
+	return 
+}
+
+func (this *UserProcess) Register(userId int, userPwd string, userName string)  (err error) {
+	//1.连接到服务器
+	conn, err := net.Dial("tcp", "0.0.0.0:8889")
+	if err != nil {
+		fmt.Println("dial error = ", err)
+		return 
+	}
+	defer conn.Close()
+
+	//2.先将消息结构化,然后在发送给服务器
+	var mes message.Message
+	mes.Type = message.RegisterMesType
+
+	//3.创建一个RegisterMes结构体
+	var registerMes message.RegisterMes
+	registerMes.User.UserId = userId
+	registerMes.User.UserPwd = userPwd
+	registerMes.User.UserName = userName 
+
+	//4.将registerMes序列化
+	data, err := json.Marshal(registerMes)
+	if err != nil {
+		fmt.Println("registerMes Marshal err = ", err)
+		return 
+	}
+
+	//5.将data付给mes.Data
+	mes.Data = string(data)
+
+	//6.将mes消息体实例序列化
+	data, err = json.Marshal(mes)
+	if err != nil {
+		fmt.Println("mes Marshal err = ", err)
+		return 
+	}
+
+	//7.创建一个Transfer实例
+	tf := &utils.Transfer{
+		Conn : conn,
+	}
+
+	//8.发送data给服务器
+	err = tf.WritePkg(data)
+	if err != nil {
+		fmt.Println("注册消息发送错误 err = ", err)
+		return 
+	}
+
+	//9.从服务器接收数据
+	mes, err = tf.ReadPkg() 
+	if err != nil {
+		fmt.Println("register readPkg(conn) error = ", err)
+		return
+	}
+
+	//10.将消息反序列化
+	var registerResMes message.RegisterResMes 
+	err = json.Unmarshal([]byte(mes.Data), &registerResMes)
+	if registerResMes.Code == 200 {
+		fmt.Println("注册成功,请从新登陆")
+		os.Exit(0)
+	} else {
+		fmt.Println(registerResMes.Error)
+		os.Exit(0)
 	}
 	return 
 }

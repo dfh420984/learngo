@@ -71,3 +71,55 @@ func (this *UserProcess) ServerProcessLogin(mes *message.Message) (err error) {
 	}
 	return tf.WritePkg(data)
 }
+
+//用来处理用户注册逻辑
+func (this *UserProcess) ServerProcessRegister(mes *message.Message) (err error) {
+	//1.先从mse.data中反序列取出RegisterMes
+	var registerMes message.RegisterMes
+	err = json.Unmarshal([]byte(mes.Data), &registerMes)
+	if err != nil {
+		fmt.Println("jsom Unmarshal fail err =", err)
+	}
+
+	//2.声明一个resMes
+	var resMes message.Message
+	resMes.Type = message.RegisterResMesType
+
+	//3.在声明一个RegisterMes
+	var registerResMes message.RegisterResMes
+
+	//4.去redis完成注册
+	err = model.MyUserDao.Register(&registerMes.User)
+	if err != nil {
+		if err == model.ERROR_USER_EXISTS {
+			registerResMes.Code = 505
+			registerResMes.Error = err.Error()
+		} else {
+			registerResMes.Code = 506
+			registerResMes.Error = "注册发送未知错误。。"
+		}
+	} else {
+		registerResMes.Code = 200
+		fmt.Println(registerMes.User, "注册成功")
+	}
+
+	//5.将registerResMes序列化
+	data, err := json.Marshal(registerResMes)
+	if err != nil {
+		fmt.Println("json Marshal registerResMes fail err=", err)
+		return
+	}
+	resMes.Data = string(data)
+	//4.将resMes消息体实例序列化
+	data, err = json.Marshal(resMes)
+	if err != nil {
+		fmt.Println("resMes Marshal err = ", err)
+		return 
+	}
+
+	//5.将结果返回给客户端
+	tf := &utils.Transfer{
+		Conn : this.Conn,
+	}
+	return tf.WritePkg(data)
+}
