@@ -44,3 +44,39 @@ func (this *SmsProcess) SendGroupMes(content string) (err error)  {
 	}
 	return 
 }
+
+
+func (this *SmsProcess) SendMesToOne(userId int, content string) (err error) { 
+	//1.声明mes
+	var mes message.Message
+	mes.Type = message.SendMesToOneType
+
+	//2.声明SendMesToOne
+	var sendMesToOne message.SendMesToOne
+	sendMesToOne.ReciverId = userId
+	sendMesToOne.Content = content
+	sendMesToOne.UserId = CurUser.UserId
+	sendMesToOne.UserStatus = CurUser.UserStatus
+
+	//3.序列化sendMesToOne
+	data, err := json.Marshal(sendMesToOne)
+	if err != nil {
+		fmt.Println("json.Marshal(sendMesToOne) err = ", err)
+		return 
+	}
+
+	//4.在序列化mes
+	mes.Data = string(data)
+	data, err = json.Marshal(mes)
+
+	//5.给服务器发送消息
+	tf := &utils.Transfer{
+		Conn : CurUser.Conn,
+	}
+	err = tf.WritePkg(data)
+	if err != nil {
+		fmt.Println("tf.WritePkg(data) err=", err.Error())
+		return
+	}
+	return 
+}

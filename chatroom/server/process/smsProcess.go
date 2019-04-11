@@ -43,3 +43,28 @@ func (this *SmsProcess) SendMesToEachOnlineUser(data []byte, conn net.Conn) {
 		fmt.Println("SendMesToEachOnlineUser tf.WritePkg(data) err", err.Error())
 	}
 }
+
+//点对点聊天
+func (this *SmsProcess) SendMesToOne(mes *message.Message) { 
+	//1.先取出sendMesToOne
+	var sendMesToOne message.SendMesToOne
+	err := json.Unmarshal([]byte(mes.Data), &sendMesToOne)
+	if err != nil {
+		fmt.Println("json.Unmarshal([]byte(mes.Data), &sendMesToOne) err = ", err.Error())
+		return
+	}
+	data, err := json.Marshal(mes)
+	if err != nil {
+		fmt.Println("json.Marshal(mes) err = ", err.Error())
+		return
+	}
+	//遍历在线用户开始群发
+	for id, up := range usrMgr.onlineUsers {
+		if id == sendMesToOne.UserId { //过滤掉自己
+			continue 
+		}
+		if id == sendMesToOne.ReciverId { //发送消息给指定用户
+			this.SendMesToEachOnlineUser(data, up.Conn)
+		}
+	}
+}

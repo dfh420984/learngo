@@ -43,3 +43,16 @@ func outputGroupMes(mes *message.Message) {
 	info := fmt.Sprintf("用户id:\t%d,对大家说:\t%s", smsMes.UserId, smsMes.Content)
 	fmt.Println(info)
 }
+
+//输出点对点消息
+func outputToOneMes(mes *message.Message) {
+	var sendMesToOne message.SendMesToOne
+	err := json.Unmarshal([]byte(mes.Data), &sendMesToOne)
+	if err != nil {
+		fmt.Println("outputToOneMes json.Unmarshal err=", err.Error())
+		return
+	}
+	info := fmt.Sprintf("接收到用户id:\t%d,对id:%d 用户说:\t%s", sendMesToOne.UserId, sendMesToOne.ReciverId,
+	sendMesToOne.Content)
+	fmt.Println(info)
+}

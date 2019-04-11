@@ -10,14 +10,15 @@ import (
 )
 
 func ShowMenu()  {
-	fmt.Println("-------恭喜xxx登录成功---------")
+	fmt.Printf("-------恭喜用户id:%d登录成功---------\n",CurUser.UserId)
 	fmt.Println("-------1. 显示在线用户列表---------")
-	fmt.Println("-------2. 发送消息---------")
-	fmt.Println("-------3. 信息列表---------")
+	fmt.Println("-------2. 发送群聊消息---------")
+	fmt.Println("-------3. 点对点聊天---------")
 	fmt.Println("-------4. 退出系统---------")
 	fmt.Println("请选择(1-4):")
 	var key int 
 	var content string
+	var userId int
 	fmt.Scanf("%d\n", &key) 
 	switch key {
 		case 1:
@@ -29,7 +30,12 @@ func ShowMenu()  {
 			smsProcess := &SmsProcess{}
 			smsProcess.SendGroupMes(content)
 		case 3:
-			fmt.Println("信息列表")
+			fmt.Println("请输入聊天用户id")
+			fmt.Scanf("%d\n", &userId)
+			fmt.Println("请输入你要发送的消息")
+			fmt.Scanf("%s\n", &content)
+			smsProcess := &SmsProcess{}
+			smsProcess.SendMesToOne(userId, content)
 		case 4:
 			fmt.Println("你选择退出了系统...")
 			os.Exit(0)
@@ -60,6 +66,8 @@ func serverProcessMes(conn net.Conn) {
 				updateUserStatus(&notifyUserStatusMes)
 			case message.SmsMesType: //处理群发
 				outputGroupMes(&mes)
+			case message.SendMesToOneType: //处理点对点聊天
+				outputToOneMes(&mes)
 			default:
 				fmt.Println("服务器返回了未知信息")
 		}
