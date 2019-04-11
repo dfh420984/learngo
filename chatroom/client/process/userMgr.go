@@ -3,10 +3,13 @@ package process
 import (
 	"fmt"
 	"learngo/chatroom/common/message"
+	"learngo/chatroom/client/model"
+	"encoding/json"
 )
 
 //客户端要维护的map
 var onlineUsers map[int]*message.User = make(map[int]*message.User, 10)
+var CurUser model.CurUser //我们在用户登录成功后，完成对CurUser初始化
 
 //在客户端显示在线用户列表
 func outputOnlineUser()  {
@@ -27,4 +30,16 @@ func updateUserStatus(notifyUserStatusMes *message.NotifyUserStatusMes) {
 	user.UserStatus = notifyUserStatusMes.Status 
 	onlineUsers[notifyUserStatusMes.UserId] = user
 	outputOnlineUser()
+}
+
+//输出群发消息
+func outputGroupMes(mes *message.Message) {
+	var smsMes message.SmsMes
+	err := json.Unmarshal([]byte(mes.Data), &smsMes)
+	if err != nil {
+		fmt.Println("outputGroupMes json.Unmarshal err=", err.Error())
+		return
+	}
+	info := fmt.Sprintf("用户id:\t%d,对大家说:\t%s", smsMes.UserId, smsMes.Content)
+	fmt.Println(info)
 }
