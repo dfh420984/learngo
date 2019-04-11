@@ -14,8 +14,10 @@ var CurUser model.CurUser //我们在用户登录成功后，完成对CurUser初
 //在客户端显示在线用户列表
 func outputOnlineUser()  {
 	fmt.Println("当前在线用户列表:")
-	for id, _ := range onlineUsers {
-		fmt.Println("用户id:\t", id)
+	for id, user := range onlineUsers { 
+		if user.UserStatus == message.UserOnline {
+			fmt.Println("用户id:\t", id)
+		}
 	}
 }
 

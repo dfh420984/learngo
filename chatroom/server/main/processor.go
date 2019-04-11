@@ -36,6 +36,12 @@ func (this *Processor) serverProcessMes(mes *message.Message) (err error) {
 			//处理点对点聊天
 			up := &process2.SmsProcess{}
 			up.SendMesToOne(mes)
+		case message.NotifyUserStatusMesType: 
+			//处理用户退出登陆
+			up := &process2.UserProcess{
+				Conn : this.Conn,
+			}
+			up.DelOnlineUser(mes)
 		default:
 			fmt.Println("消息类型不存在，无法处理")
 	}

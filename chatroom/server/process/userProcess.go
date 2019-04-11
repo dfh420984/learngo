@@ -59,7 +59,7 @@ func (this *UserProcess) ServerProcessLogin(mes *message.Message) (err error) {
 			loginResMes.UsersId = append(loginResMes.UsersId, id)
 		}
 		//通知其他用户上线
-		this.NotifyOthersOnlineUser(LoginMes.UserId)
+		this.NotifyOthersOnlineUser(LoginMes.UserId,message.UserOnline)
 		fmt.Println(user, "登录成功")
 	}
 	
@@ -137,24 +137,24 @@ func (this *UserProcess) ServerProcessRegister(mes *message.Message) (err error)
 }
 
 //通知所有在线用户的方法
-func (this *UserProcess) NotifyOthersOnlineUser(userId int) {
+func (this *UserProcess) NotifyOthersOnlineUser(userId int, status int) {
 	for id, up := range usrMgr.onlineUsers {
 		if id == userId {
 			continue
 		}
 		//开始一个个通知
-		up.NotifyMeOnline(userId)
+		up.NotifyMeOnline(userId, status)
 	}
 }
 
-func (this *UserProcess) NotifyMeOnline(userId int) { 
+func (this *UserProcess) NotifyMeOnline(userId int, status int) { 
 	//1.开始组装NotifyUserStatusMes结构体消息
 	var mes message.Message
 	mes.Type = message.NotifyUserStatusMesType
 
 	var notifyUserStatusMes message.NotifyUserStatusMes
 	notifyUserStatusMes.UserId = userId
-	notifyUserStatusMes.Status = message.UserOnline
+	notifyUserStatusMes.Status = status
 
 	//2.将NotifyUserStatusMes序列化
 	data, err := json.Marshal(notifyUserStatusMes)
@@ -180,4 +180,17 @@ func (this *UserProcess) NotifyMeOnline(userId int) {
 		fmt.Println("notifyOnMe err", err)
 	}
 	return
+}
+
+func (this *UserProcess) DelOnlineUser(mes *message.Message) {
+	var notifyUserStatusMes message.NotifyUserStatusMes
+	err := json.Unmarshal([]byte(mes.Data), &notifyUserStatusMes)
+	if err != nil {
+		fmt.Println("UpdateUserStatus json.Unmarshal error =", err)
+		return
+	}
+	//更新onlineUsers状态
+	usrMgr.DelOnlineUser(notifyUserStatusMes.UserId)
+	//通知所有其他用户
+	this.NotifyOthersOnlineUser(notifyUserStatusMes.UserId,message.UserOffline)
 }

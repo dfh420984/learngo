@@ -14,7 +14,7 @@ func ShowMenu()  {
 	fmt.Println("-------1. 显示在线用户列表---------")
 	fmt.Println("-------2. 发送群聊消息---------")
 	fmt.Println("-------3. 点对点聊天---------")
-	fmt.Println("-------4. 退出系统---------")
+	fmt.Println("-------4. 退出登陆---------")
 	fmt.Println("请选择(1-4):")
 	var key int 
 	var content string
@@ -37,7 +37,9 @@ func ShowMenu()  {
 			smsProcess := &SmsProcess{}
 			smsProcess.SendMesToOne(userId, content)
 		case 4:
-			fmt.Println("你选择退出了系统...")
+			fmt.Println("你选择退出了登陆...")
+			up := &UserProcess{}
+			up.LoginOut(CurUser.UserId)
 			os.Exit(0)
 		default :
 			fmt.Println("你输入的选项不正确..")

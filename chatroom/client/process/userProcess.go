@@ -188,3 +188,50 @@ func (this *UserProcess) Register(userId int, userPwd string, userName string)  
 	}
 	return 
 }
+
+//退出登陆
+func (this *UserProcess) LoginOut(userId int) { 
+	conn, err := net.Dial("tcp", "0.0.0.0:8889")
+	if err != nil {
+		// handle error
+		fmt.Println("dial error = ", err)
+		return 
+	}
+	defer conn.Close()
+	
+	var mes message.Message
+	mes.Type = message.NotifyUserStatusMesType
+
+	var notifyUserStatusMes message.NotifyUserStatusMes
+	notifyUserStatusMes.UserId = userId
+	notifyUserStatusMes.Status = message.UserOffline
+
+	//4.将registerMes序列化
+	data, err := json.Marshal(notifyUserStatusMes)
+	if err != nil {
+		fmt.Println("notifyUserStatusMes Marshal err = ", err)
+		return 
+	}
+
+	//5.将data付给mes.Data
+	mes.Data = string(data)
+
+	//6.将mes消息体实例序列化
+	data, err = json.Marshal(mes)
+	if err != nil {
+		fmt.Println("mes Marshal err = ", err)
+		return 
+	}
+
+	//7.创建一个Transfer实例
+	tf := &utils.Transfer{
+		Conn : conn,
+	}
+
+	//8.发送data给服务器
+	err = tf.WritePkg(data)
+	if err != nil {
+		fmt.Println("注册消息发送错误 err = ", err)
+		return 
+	}
+}
