@@ -11,6 +11,7 @@ type HeroNode struct {
 	name string
 	nickname string
 	next *HeroNode
+	prev *HeroNode
 }
 
 //插入链表(在链表最后插入)
@@ -24,9 +25,10 @@ func (this *HeroNode) InsertNode(head *HeroNode, newNode *HeroNode) {
 		tmpNode = tmpNode.next //找到最后一个节点插入
 	}
 	tmpNode.next = newNode
+	newNode.prev = tmpNode
 }
 
-//显示链表
+//显示链表(顺序)
 func (this *HeroNode) ListNode(head *HeroNode) {
 	//1.判断该链表是否为空
 	tmpNode := head
@@ -38,6 +40,33 @@ func (this *HeroNode) ListNode(head *HeroNode) {
 		fmt.Printf("[%d %s %s]--->",tmpNode.next.no,tmpNode.next.name,tmpNode.next.nickname)
 		tmpNode = tmpNode.next
 		if tmpNode.next == nil {
+			break
+		}
+	}
+}
+
+//显示链表(倒叙)
+func (this *HeroNode) ListNode2(head *HeroNode) {
+	//1.判断该链表是否为空
+	tmpNode := head
+	if tmpNode.next == nil {
+		fmt.Println("该链表为空")
+		return
+	}
+
+	//2.找到最后一个节点
+	for {
+		if tmpNode.next == nil {
+			break
+		}
+		tmpNode = tmpNode.next
+	}
+
+	//3.从后往前输出
+	for {
+		fmt.Printf("[%d %s %s]--->",tmpNode.no,tmpNode.name,tmpNode.nickname)
+		tmpNode = tmpNode.prev
+		if tmpNode.prev == nil {
 			break
 		}
 	}
@@ -63,12 +92,16 @@ func  (this *HeroNode) InsertNodeByNo(head *HeroNode, newNode *HeroNode) (err er
 		return errors.New(errInfo)
 	} else { 
 		newNode.next = tmpNode.next
+		newNode.prev = tmpNode
+		if tmpNode.next != nil {
+			tmpNode.next.prev = newNode
+		}
 		tmpNode.next = newNode
 	}
 	return
 }
 
-//单向联表删除
+//双向链表删除
 func (this *HeroNode) DelNode(head *HeroNode, id int) (err error) {
 	tmpNode := head
 	if tmpNode.next == nil {
@@ -85,7 +118,10 @@ func (this *HeroNode) DelNode(head *HeroNode, id int) (err error) {
 		tmpNode = tmpNode.next
 	}
 	if flag {
-		tmpNode.next = tmpNode.next.next
+		tmpNode.next = tmpNode.next.next 
+		if tmpNode.next != nil {
+			tmpNode.next.prev = tmpNode
+		}
 	} else {
 		fmt.Println("要删除的id不存在")
 	}
@@ -114,13 +150,16 @@ func main()  {
 		name : "吴用",
 		nickname : "智多星",
 	}
-	head.InsertNode(head, hero1)
-	head.InsertNode(head, hero3)
-	head.InsertNode(head, hero4)
-	head.InsertNode(head, hero2)
-	// head.InsertNodeByNo(head, hero1)
-	// head.InsertNodeByNo(head, hero3)
-	// head.InsertNodeByNo(head, hero4)
-	// head.InsertNodeByNo(head, hero2)
+	// head.InsertNode(head, hero1)
+	// head.InsertNode(head, hero3)
+	// head.InsertNode(head, hero4)
+	// head.InsertNode(head, hero2)
+	head.InsertNodeByNo(head, hero1)
+	head.InsertNodeByNo(head, hero3)
+	head.InsertNodeByNo(head, hero4)
+	head.InsertNodeByNo(head, hero2)
+	head.ListNode(head)
+	fmt.Println()
+	head.DelNode(head,3)
 	head.ListNode(head)
 }
