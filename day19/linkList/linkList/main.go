@@ -68,6 +68,30 @@ func  (this *HeroNode) InsertNodeByNo(head *HeroNode, newNode *HeroNode) (err er
 	return
 }
 
+//单向联表删除
+func (this *HeroNode) DelNode(head *HeroNode, id int) (err error) {
+	tmpNode := head
+	if tmpNode.next == nil {
+		return errors.New("该链表为空")
+	}
+	flag := false
+	for {
+		if tmpNode.next == nil { //找到最后一个节点
+			return errors.New("该id不存在")
+		} else if tmpNode.next.no == id {
+			flag = true
+			break
+		}
+		tmpNode = tmpNode.next
+	}
+	if flag {
+		tmpNode.next = tmpNode.next.next
+	} else {
+		fmt.Println("要删除的id不存在")
+	}
+	return
+}
+
 func main()  {
 	head := &HeroNode{}
 	hero1 := &HeroNode{
@@ -98,5 +122,8 @@ func main()  {
 	head.InsertNodeByNo(head, hero3)
 	head.InsertNodeByNo(head, hero4)
 	head.InsertNodeByNo(head, hero2)
+	head.ListNode(head)
+	fmt.Println()
+	head.DelNode(head, 3)
 	head.ListNode(head)
 }
