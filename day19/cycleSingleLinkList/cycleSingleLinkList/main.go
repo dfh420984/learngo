@@ -128,5 +128,6 @@ func main()  {
 	head.InsertNode(head, hero2)
 	head.InsertNode(head, hero3)
 	head.InsertNode(head, hero4)
+	head = head.DelNode(head, 3)
 	head.ListNode(head)
 }
