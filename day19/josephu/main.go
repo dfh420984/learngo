@@ -5,9 +5,10 @@ import (
 )
 
 type Boy struct {
-	no int
+	no   int
 	next *Boy
 }
+
 /*********josephu问题************/
 
 //添加小孩
@@ -22,7 +23,7 @@ func addBoy(num int) *Boy {
 	//2.开始添加
 	for i := 1; i <= num; i++ {
 		boy := &Boy{
-			no : i,
+			no: i,
 		}
 		if i == 1 { //添加第一个小孩
 			first = boy
@@ -31,7 +32,7 @@ func addBoy(num int) *Boy {
 		} else {
 			cur.next = boy
 			cur = boy
-			cur.next = first  //构造环形链表
+			cur.next = first //构造环形链表
 		}
 	}
 	return first
@@ -91,13 +92,13 @@ func playGame(first *Boy, startNo int, countNo int) {
 		tail = tail.next
 	}
 	//开始从第startNo个小孩,
-	for i := 1; i <= startNo - 1; i++ { 
+	for i := 1; i <= startNo-1; i++ {
 		first = first.next
 		tail = tail.next
 	}
 	for {
 		//开始数countNo，first指针直到对应小孩
-		for i := 1; i <= countNo - 1; i++ {
+		for i := 1; i <= countNo-1; i++ {
 			first = first.next
 			tail = tail.next
 		}
@@ -112,10 +113,10 @@ func playGame(first *Boy, startNo int, countNo int) {
 	fmt.Printf("小孩编号%d出圈\n", first.no)
 }
 
-func main()  {
+func main() {
 	first := addBoy(5)
 	showLinkList(first)
 	// count := countList(first)
-	// fmt.Println("链表中元素个数为：",count) 
+	// fmt.Println("链表中元素个数为：",count)
 	playGame(first, 2, 3)
 }

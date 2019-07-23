@@ -1,0 +1,10 @@
+{
+    "window.zoomLevel": 1,
+    "go.autocompleteUnimportedPackages": true,
+    "go.gocodePackageLookupMode": "go",
+    "go.gotoSymbol.includeImports": true,
+    "go.useCodeSnippetsOnFunctionSuggest": true,
+    "go.inferGopath": true,
+    "go.gopath":"/Users/duanfuhao/go",
+    "go.useCodeSnippetsOnFunctionSuggestWithoutType": true,
+}
