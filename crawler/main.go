@@ -6,6 +6,7 @@ import (
 	"io"
 	"io/ioutil"
 	"net/http"
+	"regexp"
 
 	"golang.org/x/net/html/charset"
 	"golang.org/x/text/encoding"
@@ -28,7 +29,8 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	fmt.Printf("%s\n", all)
+	//fmt.Printf("%s\n", all)
+	printCityList(all)
 }
 
 func determinEncode(r io.Reader) encoding.Encoding {
@@ -38,4 +40,16 @@ func determinEncode(r io.Reader) encoding.Encoding {
 	}
 	e, _, _ := charset.DetermineEncoding(bytes, "")
 	return e
+}
+
+func printCityList(contents []byte) {
+	re := regexp.MustCompile(`<a href="(http://www.zhenai.com/zhenghun/[0-9a-zA-Z]+)"[^>]*>([^<]+)</a>`)
+	matches := re.FindAllSubmatch(contents, -1)
+	for _, m := range matches {
+		// for _, subMatch := range m {
+		// 	fmt.Printf("%s ", subMatch)
+		// }
+		fmt.Printf("URL: %s, CityName: %s \n", m[1], m[2])
+	}
+	//fmt.Printf("city found %d\n", len(matches))
 }
