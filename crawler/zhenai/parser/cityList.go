@@ -7,8 +7,8 @@ import (
 
 const cityListRe = `<a href="(http://www.zhenai.com/zhenghun/[0-9a-zA-Z]+)"[^>]*>([^<]+)</a>`
 
-//ParserCityList ...
-func ParserCityList(contents []byte) engine.ParseResult {
+//CityList ...
+func CityList(contents []byte) engine.ParseResult {
 	re := regexp.MustCompile(cityListRe)
 	matches := re.FindAllSubmatch(contents, -1)
 	result := engine.ParseResult{}
