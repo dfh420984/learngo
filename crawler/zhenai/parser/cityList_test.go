@@ -11,7 +11,7 @@ func TestCityList(t *testing.T) {
 		panic(err)
 	}
 	//fmt.Printf("%s", contents)
-	result := CityList(contents)
+	result := ParseCityList(contents)
 	const resultSize = 470
 	if len(result.Requests) != resultSize {
 		t.Errorf("expect size %d, but actual size %d", resultSize, len(result.Requests))
