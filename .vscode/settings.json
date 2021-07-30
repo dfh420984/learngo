@@ -4,7 +4,7 @@
     "go.gocodePackageLookupMode": "go",
     "go.gotoSymbol.includeImports": true,
     "go.useCodeSnippetsOnFunctionSuggest": true,
-    "go.inferGopath": true,
+    "go.inferGopath": false,
     "go.gopath":"/Users/duanfuhao/go",
     "go.useCodeSnippetsOnFunctionSuggestWithoutType": true,
 }
