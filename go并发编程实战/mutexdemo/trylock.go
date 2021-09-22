@@ -100,7 +100,7 @@ func count() {
 //使用 Mutex 实现一个线程安全的队列
 type SliceQueue struct {
 	data []interface{}
-	mu sync.Mutex
+	mu   sync.Mutex
 }
 
 func NewSliceQueue(n int) *SliceQueue {
@@ -129,7 +129,7 @@ func (q *SliceQueue) Dequeue() interface{} {
 }
 
 func main() {
-	// var mu Mutex
-	// mu.try()
-	//count()
+	var mu Mutex
+	mu.try()
+	count()
 }
