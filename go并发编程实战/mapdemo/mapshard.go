@@ -4,6 +4,13 @@ import (
 	"sync"
 )
 
+//减少锁的粒度常用的方法就是分片（Shard），将一把锁分成几把锁，每个锁控制一个分片，以降低锁的粒度，进而提高访问此 map 对象的吞吐。Go 比较知名的分片并发 map 的实现是
+//https://github.com/orcaman/concurrent-map
+//扩展其它功能的 map 实现，比如带有过期功能的timedmap、使用红黑树实现的 key 有序的treemap等
+//https://github.com/zekroTJA/timedmap
+//https://pkg.go.dev/github.com/emirpasic/gods/maps/treemap
+
+//分片加锁：更高效的并发 map
 //分片数量
 var SHARD_COUNT = 32
 
