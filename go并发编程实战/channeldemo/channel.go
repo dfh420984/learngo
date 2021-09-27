@@ -8,6 +8,7 @@ import (
 //令牌参数
 type token struct{}
 
+//有四个 goroutine，编号为 1、2、3、4。每秒钟会有一个 goroutine 打印出它自己的编号，要求你编写一个程序，让输出的编号总是按照 1、2、3、4、1、2、3、4、……的顺序打印出来。
 func main() {
 	chs := make([]chan token, 4)
 	for i := 0; i < 4; i++ {

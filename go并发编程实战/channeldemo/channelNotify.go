@@ -23,7 +23,7 @@ func main() {
 			default:
 				// 业务计算
 				fmt.Println("working...")
-				time.Sleep(100 * time.Millisecond)
+				time.Sleep(300 * time.Millisecond)
 			}
 		}
 	}()
@@ -40,7 +40,7 @@ func main() {
 	select {
 	case <-closed:
 		fmt.Println("清理工作正常退出!")
-	case <-time.After(5*time.Second):
+	case <-time.After(5 * time.Second):
 		fmt.Println("清理超时，不等了")
 	}
 	fmt.Println("程序优雅退出!")
