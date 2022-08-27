@@ -36,7 +36,7 @@ func (s *Server) Run() {
 	//监听
 	listen, err := net.Listen("tcp", s.addr)
 	if err != nil {
-		fmt.Printf("监听 %s, err: %v", s.addr, err)
+		fmt.Printf("监听 %s, err: %v\n", s.addr, err)
 		return
 	}
 	for {
