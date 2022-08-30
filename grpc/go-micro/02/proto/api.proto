@@ -1,0 +1,28 @@
+syntax = "proto3";
+
+//protoc --micro_out=. --go_out=. ./api.proto
+package proto;
+option go_package = "./;proto";
+
+//定义需要的结构体参数
+message CallRequest{
+    string name = 1;
+}
+
+//响应参数
+message CallResponse{
+    string message = 1;
+}
+
+message EmptyRequest{}
+
+message EmptyResponse{}
+
+//定义接口
+service Example{
+    rpc Call(CallRequest) returns (CallResponse) {}
+}
+
+service Foo{
+    rpc Bar(EmptyRequest) returns (EmptyResponse) {}
+}
