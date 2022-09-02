@@ -30,6 +30,11 @@ func (f *Foo) Bar(ctx context.Context, req *pb.EmptyRequest, resp *pb.EmptyRespo
 	return nil
 }
 
+// 1.micro server (启动micro服务)
+// 2.cd /Users/duanfuhao/learngo/grpc/go-micro/02
+// 3.micro run . (运行微服务)
+// 命令访问：micro 02 example call --name=zs
+// http 方式访问 curl "http://localhost:8080/02/example/call?name=zs"
 func main() {
 	//1.得到微服务实例
 	ser := service.New(

@@ -10,7 +10,7 @@ type Counter struct {
 	Count int
 }
 
-//死锁检测 go vet "/Users/smzdm/duanfuhao/learngo/go并发编程实战/mutexdemo/copy.go"
+//死锁检测 go vet "/Users/duanfuhao/learngo/go并发编程实战/mutexdemo/copy.go"
 func main() {
 	var c Counter
 	c.Lock()
